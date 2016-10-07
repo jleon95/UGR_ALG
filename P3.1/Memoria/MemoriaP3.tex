@@ -1,0 +1,188 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{color}
+\usepackage{enumerate}
+\usepackage{fancyhdr}
+\usepackage{minted}
+\usepackage{graphicx}
+\usepackage{array}
+\usepackage{hyperref}
+\usepackage{amssymb}
+\usepackage[spanish]{babel}
+\usepackage[spanish]{algorithm2e}
+
+\setlength{\oddsidemargin}{18pt}
+\setlength{\headheight}{14pt}
+\setlength{\textheight}{609pt}
+\setlength{\marginparsep}{11pt}
+\setlength{\footskip}{30pt}
+\hoffset = 0pt
+\voffset = 0pt
+\setlength{\topmargin}{0pt}
+\setlength{\headsep}{25pt}
+\setlength{\textwidth}{424pt}
+\setlength{\marginparwidth}{54pt}
+\setlength{\marginparpush}{5pt}
+\paperwidth = 597pt
+\paperheight = 845pt
+
+\pagestyle{fancy}
+\fancyhead[LO]{\textcolor[rgb]{0,0,0}{Grado en Ingeniería Informática}}
+\fancyhead[RO]{\textcolor[rgb]{0.2,0.2,0.9}{Algorítmica, Curso 2015-2016}}
+
+\hypersetup{
+	colorlinks,
+	citecolor=black,
+	filecolor=black,
+	linkcolor=black,
+	urlcolor=black
+}
+
+\begin{document}
+
+	\begin{titlepage}
+
+		\centering
+
+		\begin{figure}[h]
+
+			\centering
+			\includegraphics[width=0.6\textwidth]{logo-ugr.png}
+			
+		\end{figure}
+
+		\vspace{1cm}
+
+		{\scshape\LARGE Universidad de Granada}
+
+		\vspace{1cm}
+
+		{\LARGE Algorítmica}
+
+		\vspace{1cm}
+
+		{\huge\bfseries\textit{Algoritmos Greedy, parte 1}}
+
+		\vspace{1cm}
+
+		{\itshape\large 
+		Laura Calle Caraballo \\
+		Cristina María Garrido López \\
+		Germán González Almagro \\
+		Javier León Palomares \\
+		Antonio Manuel Milán Jiménez}
+
+		\vfill
+
+		{\Large\today}
+
+	\end{titlepage}
+
+\newpage
+
+	\tableofcontents
+
+\newpage
+
+	\section{Introducción.}
+
+		\subsection{Descripción del problema.}
+
+			\par
+			Un granjero necesita disponer siempre de un determinado fertilizante. La cantidad máxima que puede almacenar la consume en $r$ días y, antes de que eso ocurra, necesita acudir a una tienda del pueblo para abastecerse. El problema es que dicha tienda tiene un horario de apertura muy irregular (sólo abre determinados días). El granjero conoce los días en que abre la tienda, y desea minimizar el número de desplazamientos al pueblo para abastecerse.
+
+		\subsection{Resolución.}
+
+			\par
+			Se ha diseñado un algoritmo \textit{Greedy} para determinar los días en los que debe ir al pueblo a abastecerse durante un cierto intervalo de tiempo. Asimismo, se demuestra que las soluciones proporcionadas por este algoritmo son óptimas.
+
+	\section{Algoritmo desarrollado.}
+
+		\subsection{Elementos.}
+
+			\begin{itemize}
+
+				\item
+				Conjunto de Candidatos: lista de días que abre la tienda.
+				\item
+				Conjunto de Seleccionados: lista de días que ha ido a la tienda.
+				\item
+				Función Solución: ha cubierto el período de tiempo para el que tenía información.
+				\item
+				Función de Factibilidad: si entre dos días de apertura pasan más de $r$ días, el problema no tiene solución.
+				\item
+				Función Selección: puede o no esperar al próximo día que abra la tienda.
+				\item
+				Función Objetivo: cuántos días ha abierto la tienda.
+
+			\end{itemize}
+
+		\subsection{Pseudocódigo.}
+
+				\begin{algorithm}[H]
+
+					\textbf{function} Greedy(listaApertura, limiteDias);
+
+					\Begin{
+
+						ultimoDiaCompra $\longleftarrow 0$\;
+						listaDias $\longleftarrow \varnothing$\;
+
+						\For{$i = 1$ \textbf{to} $n-1$}{
+
+							\If{listaApertura[$i+1$] - ultimoDiaCompra $>$ limiteDias}{
+
+								listaDias $\longleftarrow$ listaDias $\cup$ listaApertura[$i$]\;
+								ultimoDiaCompra $\longleftarrow$ listaApertura[$i$]\;
+
+							}
+						}
+
+						\KwRet listaDias, $\left|listaDias\right|$\;
+
+					}
+
+				\end{algorithm}
+
+\newpage
+
+	\section{Demostración de optimalidad.}
+
+		\par
+		Suponemos una solución óptima \textit{B}, lo que quiere decir que resolverá el problema en menos visitas al proveedor que nuestra solución \textit{A}. Llamaremos $k$ al máximo valor posible donde ambas soluciones son iguales, es decir, $b(k) = a(k)$.
+
+		\par
+		Asumiendo que:
+
+		\begin{enumerate}
+
+			\item
+			$0 = a(0) < a(1) < ... < a(p) = $ \textit{SN-Óptima}, siendo $p$ el último día seleccionado por el algoritmo. Asumimos que esta solución no es óptima.
+
+			\item
+			Sean las soluciones óptimas $0 = b(0) < b(1) < ... < b(q)$, $q<p$. Llamaremos $k$ al máximo valor posible donde $b(0) = a(0)$, $b(1) = a(1)$, ..., $b(k) = a(k)$ y sea \textit{S-Óptima} una de estas soluciones óptimas. 
+
+		\end{enumerate}
+
+		\par
+		Entonces, sabemos que:
+
+		\begin{enumerate}
+
+			\item
+			$a(k+1) > b(k+1)$, ya que el algoritmo \textit{Greedy} siempre escogerá el día más alejado.
+			\item
+			$0 = a(0) < ... < a(k) < a(k+1) < b(k+2) < ... < b(q)$, donde $q$ es el último día, sería otra solución al problema; igualmente, sería óptima, puesto que tiene el mismo tamaño que la solución óptima \textit{S-Óptima} y en la que, además, la solución \textit{A} y la nueva solución coinciden hasta $k+1$ y no hasta $k$.
+
+			\item
+			Llegamos a una contradicción, puesto que $k$ no es el máximo valor en el que $a(k)$ y $b(k)$ son iguales.
+
+		\end{enumerate}
+
+	\section{Conclusión.}
+
+		\par
+		Hemos podido comprobar que para este tipo de problemas un algoritmo \textit{Greedy} resulta la mejor opción ya que resuelve el problema de manera óptima. Además presenta un orden de
+		eficiencia O($n$), por lo que podemos decir que es bastante eficiente.
+
+\end{document}
