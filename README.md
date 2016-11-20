@@ -1,1 +1,3 @@
-Prácticas de Algorítmica. Lástima que falten los Prezis :(
+# Algorithmics
+
+Algorithm efficiency, Divide and Conquer, Greedy, Branch and Bound, Backtracking.
